@@ -1,32 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Timestamp Microservice | Aaron Lozano</title>
+    <link
+      rel="shortcut icon"
+      href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Timestamp Microservice</h1>
+      <p class="tagline">Convert natural language dates or unix timestamps.</p>
+      <br />
 
-<html>
-   <head>
-      <title>Timestamp Microservice | freeCodeCamp.org</title>
-      <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
-      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
-      <link href="style.css" rel="stylesheet" type="text/css">
-   </head>
+      <div class="tip">Hint: Try 2015-12-25 or 1451001600000</div>
 
-   <body>
-    <h1>Timestamp Microservice</h1>
-    <hr />
-    <div class="container">
-      <h2>Example Usage:</h2>
-      <ul>
-        <li><a href="api/2015-12-25">[project url]/api/2015-12-25</a></li>
-        <li><a href="api/1451001600000">[project url]/api/1451001600000</a></li>
-      </ul>
+      <input id="dateInput" type="text" placeholder="Enter a valid date" />
 
-      <h2>Example Output:</h2>
-      <p>
-        <code>{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}</code>
-      </p>
-    </div>
-    <div class="footer">
-      <p>
-        By <a href="https://www.freecodecamp.org/">freeCodeCamp.org</a>
-      </p>
-    </div>
+      <div class="buttons">
+        <button id="btnConvert">Convert</button>
+        <button id="btnNow">Get Current Time</button>
+      </div>
+
+      <pre id="outputBox"></pre>
+
+      <footer>
+        By
+        <a href="https://github.com/LozanoHAU/LozanoWD303_timestamp"
+          >Aaron Lozano</a
+        >
+      </footer>
+    </main>
+
+    <script>
+      const dateInput = document.getElementById("dateInput");
+      const btnConvert = document.getElementById("btnConvert");
+      const btnNow = document.getElementById("btnNow");
+      const outputBox = document.getElementById("outputBox");
+
+      async function fetchTime(path) {
+        const res = await fetch(path);
+        const data = await res.json();
+        outputBox.textContent = JSON.stringify(data, null, 2);
+      }
+
+      btnConvert.addEventListener("click", () => {
+        const val = dateInput.value.trim();
+        if (!val) return;
+        fetchTime("/api/" + encodeURIComponent(val));
+      });
+
+      btnNow.addEventListener("click", () => {
+        fetchTime("/api");
+      });
+
+      dateInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") btnConvert.click();
+      });
+    </script>
   </body>
 </html>
